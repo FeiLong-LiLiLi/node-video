@@ -6,6 +6,7 @@ var Router = express.Router();
 
 Router.post('/',function(req,res){
 
+
      //数据缓存
     const video_id = req.body.video_id;
     const name = req.body.name;
@@ -33,13 +34,20 @@ Router.post('/',function(req,res){
                 if(err){
                     console.log(err);
                 }else{
-                    console.log('id为'+ video_id + '视频已更新');
+                    // pool.query(sqlQuery, video_id, function(err, data){
+                    //     if(err) throw
+                    //     reject = data;
+                    // })
+                    // reject = data;
+                    // console.log('id为'+ video_id + '视频已更新');
+                    res.json();
                 }
+
             });
             pool.end();      
         }
     });   
-    res.json();
+    // res.json();
 });
 
 
