@@ -10,7 +10,8 @@ mysql = {
     host: 'localhost',
     user: 'root',
     password: '123',
-    database: 'videodata'
+    database: 'videodata',
+    connectionLimit: 100, 
 }
 
 

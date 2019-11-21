@@ -15,7 +15,7 @@ Router.post('/',function(req,res){
     const link = req.body.link;
     const cover = req.body.cover;
     // // const creat_time = req.body.creat_time;
-    // const modify_time = req.body.modify_time;
+    const modify_time = req._startTime;
     const video_desc = req.body.video_desc;
     // //连接数据库
     var pool = mysql.createConnection(dbConfig);
@@ -23,8 +23,8 @@ Router.post('/',function(req,res){
 
     //查询是否存在
     const sqlQuery = 'SELECT * FROM video WHERE video_id=?';
-    const sqlUpdade = 'UPDATE video SET name=?, category=?, tag=?, link=?, cover=?, video_desc=? WHERE video_id=?';
-    const updateParams = [name, category, tag, link, cover, video_desc, video_id];
+    const sqlUpdade = 'UPDATE video SET name=?, category=?, tag=?, link=?, cover=?, video_desc=?, modify_time=? WHERE video_id=?';
+    const updateParams = [name, category, tag, link, cover, video_desc, modify_time, video_id];
     pool.query(sqlQuery, video_id, function(err, data){
         if(err){
             console.log(err);
