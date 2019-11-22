@@ -7,9 +7,7 @@ var Router = express.Router();
 
 
 Router.get('/',function(req,res){
-    // console.log(req);
-    // console.log(req.query);
-    // console.log(req.body.video_id);
+
     const video_id = req.query.video_id;
     const sqlQuery = 'SELECT * FROM  video WHERE video_id =?';
     const sqlDel = 'DELETE FROM video WHERE video_id =?';

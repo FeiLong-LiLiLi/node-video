@@ -32,8 +32,6 @@ Router.post('/',function(req,res){
             console.log(err);
         }else if(data.length > 0){
             console.log('id已经存在');
-            // result.status = 500;
-            // res.json(result)
         }else{    
             pool.query(sqlInsert, addParams, function(err, data){
                 if(err){
@@ -46,7 +44,6 @@ Router.post('/',function(req,res){
             pool.end();             
         }
     })
-    // console.log(result);
     res.send();
 });
 
