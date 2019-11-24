@@ -15,15 +15,18 @@ Router.post('/',function(req,res){
     const sqlQuery = 'SELECT * FROM  video WHERE name like ' + '\"%'+ name +'%\" ';
     pool.query(sqlQuery, function(err,data){
         if(err){
-            console.log(err);
-        }else if(data.length > 0){
-            // console.log(sqlLike);
-            result = data;
-            res.json(result);
+            res.json({
+                code: 50,
+                msg: '视频查询失败',
+                data: data
+            });
         }else{
-            console.log('未找到')
-            result = data;
-            res.json(result);
+            res.json({
+                code: 1,
+                msg: '视频查询成功',
+                total: data.length,
+                data: data
+            });
         }
     })
     pool.end();

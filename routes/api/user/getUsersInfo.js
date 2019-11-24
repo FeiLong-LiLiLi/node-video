@@ -7,16 +7,23 @@ var Router = express.Router();
 
 Router.get('/',function(req,res){
     
-    // var result = '';
-    var pool = mysql.createConnection(dbConfig);
     const sql = 'SELECT * FROM  users';
-    pool.query(sql, function(err,data){
+    var pool = mysql.createConnection(dbConfig);
+    pool.connect()
+    pool.query(sql, (err,data) => {
         if(err){
-            console.log(err);
+            res.json({
+                code: 50,
+                msg: '获取用户信息失败',
+                data: {}
+            })
         }else{
-            console.log('查询用户信息成功');
-            result = data;
-            res.json(result);
+            res.json({
+                code: 1,
+                msg: '获取用户信息成功',
+                total: data.length,
+                data: data
+            })
         }
     })
     pool.end();

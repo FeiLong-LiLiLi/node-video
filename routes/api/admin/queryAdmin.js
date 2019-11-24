@@ -9,23 +9,27 @@ var Router = express.Router();
 Router.post('/',function(req,res){
     
     const name = req.body.name;
-    var pool = mysql.createConnection(dbConfig);
-    // const sql = 'SELECT * FROM  users WHERE name like "%赵%" ';
-    const sqlLike = 'SELECT * FROM  admin WHERE name like ' + '\"%'+ name +'%\" ';
-    pool.query(sqlLike, function(err,data){
+    const sqlQuery = 'SELECT * FROM  admin WHERE name like ' + '\"%'+ name +'%\" ';
+
+    var conn = mysql.createConnection(dbConfig);
+    conn.connect();
+    conn.query(sqlQuery, (err,data) => {
         if(err){
-            console.log(err);
-        }else if(data.length > 0){
-            // console.log(sqlLike);
-            result = data;
-            res.json(result);
+            res.json({
+                code: 50,
+                msg: '查询管理员失败',
+                data: data
+            })
         }else{
-            console.log('未找到')
-            result = data;
-            res.json(result);
+            res.json({
+                code: 1,
+                msg: '查询管理员成功',
+                total: data.length,
+                data: data
+            })
         }
     })
-    pool.end();
+    conn.end();
 })
 
 

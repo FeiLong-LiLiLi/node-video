@@ -9,37 +9,48 @@ Router.post('/',function(req,res){
      //数据缓存
     const admin_id = req.body.admin_id;
     const name = req.body.name;
-    const password = req.body.password;
+    const psw = req.body.psw;
     const phone = req.body.phone;
     const email = req.body.email;
     // const creat_time = req.body.creat_time;
     const birth = req.body.birth;
     const sex = req.body.sex;
     const personal_signature = req.body.personal_signature;
-    // //连接数据库
-    var pool = mysql.createConnection(dbConfig);
-    pool.connect();
-
+    const modify_time = req._startTime;
     //查询是否存在
     const sqlQuery = 'SELECT * FROM admin WHERE admin_id=?';
-    const sqlUpdade = 'UPDATE admin SET name=?, phone=?, email=?, sex=?, personal_signature=? WHERE admin_id=?';
-    const updateParams = [name, phone, email, sex, personal_signature, admin_id];
-    pool.query(sqlQuery, admin_id, function(err, data){
+    const sqlUpdade = 'UPDATE admin SET name=?, phone=?, email=?, sex=?, personal_signature=?, birth=?, modify_time=? WHERE admin_id=?';
+    const updateParams = [name, phone, email, sex, personal_signature, birth, modify_time, admin_id];
+
+    var conn = mysql.createConnection(dbConfig);
+    conn.connect();
+
+    conn.query(sqlUpdade, updateParams, (err, data) =>{
         if(err){
-            console.log(err);
-        }else if(data.length > 0){
-            //更新数据
-            pool.query(sqlUpdade, updateParams, function(err, data){
+            res.json({
+                code: 50,
+                msg: '管理员数据更新失败',
+                data: data
+            })
+        }else{
+            conn.query(sqlQuery, admin_id, (err, data) =>{
                 if(err){
-                    console.log(err);
+                    res.json({
+                        code: 50,
+                        msg: '管理员数据更新失败',
+                        data: data
+                    })
                 }else{
-                    console.log('id为'+ admin_id + '管理员已更新');
+                    res.json({
+                        code: 1,
+                        msg: '管理员数据更新成功',
+                        data: data
+                    })
                 }
-            });
-            pool.end();      
+            })
+            conn.end();      
         }
-    });   
-    res.json();
+    })
 });
 
 

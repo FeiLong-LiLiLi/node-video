@@ -8,30 +8,28 @@ var Router = express.Router();
 
 Router.get('/',function(req,res){
 
-    var pool = mysql.createConnection(dbConfig);
-    pool.connect();
-    const admin_id = req.query.admin_id
-
+    const admin_id = req.query.admin_id;
     const sqlQuery = 'SELECT * FROM  admin WHERE admin_id = ?';
     const sqlDel = 'DELETE FROM admin WHERE admin_id = ?';
 
-    pool.query(sqlQuery, admin_id, (err, res) =>{
+    var conn = mysql.createConnection(dbConfig);
+    conn.connect();
+    conn.query(sqlDel, admin_id, (err, data) =>{
         if(err){
-            console.log(err);
-        }else if(res.length > 0){
-            // console.log(res.length);
-            pool.query(sqlDel, admin_id,function(err,data){
-                if(err){
-                    console.log(err);
-                }else{
-                    console.log('管理员'+admin_id+'删除');
-                    // result = data;
-                }
-            })         
-            pool.end();  
+            res.json({
+                code: 50,
+                msg: '管理员删除失败',
+                data: data.affectedRows
+            })
+        }else{
+            res.json({
+                code: 1,
+                msg: '管理员删除成功',
+                data: data.affectedRows
+            })
         }
-    });
-    res.json(); 
+    })
+    conn.end()
 
 });
 

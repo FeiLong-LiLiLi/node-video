@@ -6,20 +6,27 @@ var router = express.Router();
 
 router.get('/',function(req,res,next){
 
-    var pool = mysql.createConnection(dbConfig);
-    pool.connect();
+    var conn = mysql.createConnection(dbConfig);
+    conn.connect();
     
     var sql = 'SELECT * FROM  admin';
-    pool.query(sql, function(err,data){
+    conn.query(sql, (err,data) => {
         if(err){
-            console.log(err);
+           res.json({
+               code: 50,
+               msg: '获取管理员信息失败',
+               data: data
+           })
         }else{
-            console.log('管理员信息成功');
-            result = data;
-            res.json(result);
+            res.json({
+                code: 50,
+                msg: '获取管理员信息成功',
+                total: data.length,
+                data: data
+            })
         }
     })
-    pool.end();
+    conn.end();
 })
 
 

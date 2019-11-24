@@ -12,26 +12,49 @@ Router.get('/',function(req,res){
     const sqlQuery = 'SELECT * FROM  video WHERE video_id =?';
     const sqlDel = 'DELETE FROM video WHERE video_id =?';
 
+    // var pool = mysql.createPool(dbConfig);
+    // pool.getConnection((err, conn) =>{
+    //     if(err){
+    //         console.log(err)
+    //     }else{
+    //         conn.query(sqlDel, video_id, (err, data) =>{
+    //             if(err){
+    //                 res.json({
+    //                     code: 50,
+    //                     msg: '删除失败',
+    //                     data: data
+    //                 })
+    //             }else{
+    //                 res.json({
+    //                     code: 1,
+    //                     msg: '删除成功',
+    //                     data: data
+    //                 })
+    //             }
+    //         })
+    //         conn.release()
+    //     }
+    // })
+
     var pool = mysql.createConnection(dbConfig);
     pool.connect();
 
-    pool.query(sqlQuery, video_id, (err, res) =>{
+    pool.query(sqlDel, video_id, (err, data) => {
         if(err){
-            console.log(err);
-        }else if(res.length > 0){
-            // console.log(res.length);
-            pool.query(sqlDel, video_id,function(err,data){
-                if(err){
-                    console.log(err);
-                }else{
-                    console.log('视频'+video_id+'删除');
-                    // result = data;
-                }
-            })         
-            pool.end();  
+            res.json({
+                code: 50,
+                msg: '视频删除失败',
+                data: data.affectedRows
+            })
+        }else{
+            res.json({
+                code: 1,
+                msg: '视频删除成功',
+                data: data.affectedRows
+            })
         }
-    });
-    res.json(); 
+    })
+    pool.end();
 
 });
 

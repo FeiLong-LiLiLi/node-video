@@ -12,39 +12,50 @@ Router.post('/',function(req,res){
     const uid = uuid.v1();
     const admin_id = uid.replace(/\-/g, '');
     const name = req.body.name;
-    const password = req.body.password;
+    const psw = req.body.psw;
     const phone = req.body.phone;
     const email = req.body.email;
     const creat_time = req._startTime;
-    const birth = req.body.birth;
-    const sex = req.body.sex;
-    const personal_signature = req.body.personal_signature;
-    //连接数据库
-    var pool = mysql.createConnection(dbConfig);
-    pool.connect();
-    
-    //查询id是否存在， 同理可用于判断是否存在邮箱
+    // const birth = req.body.birth;
+    // const sex = req.body.sex;
+    // const personal_signature = req.body.personal_signature;
+
     const sqlQuery = 'SELECT * FROM  admin WHERE admin_id = ?';
-    const sqlInsert = 'INSERT INTO admin (admin_id, name, password, phone, email, sex, personal_signature, creat_time) VALUES(?,?,?,?,?,?,?,?)';
-    const addParams = [admin_id, name, password, phone, email, sex, personal_signature, creat_time];
-    pool.query(sqlQuery, admin_id, function(err, data){
+    const sqlInsert = 'INSERT INTO admin (admin_id, name, psw, phone, email, creat_time) VALUES(?,?,?,?,?,?)';
+    const addParams = [admin_id, name, psw, phone, email, creat_time];
+    
+
+    //连接数据库
+    var conn = mysql.createConnection(dbConfig);
+    conn.connect();
+    conn.query(sqlInsert, addParams, (err, data) => {
         if(err){
-            console.log(err);
-        }else if(data.length > 0){
-            console.log('id已经存在');
-        }else{    
-            pool.query(sqlInsert, addParams, function(err, data){
+            res.json({
+                code: 50,
+                msg: '添加管理员失败',
+                data: data
+            })
+        }else{
+            conn.query(sqlQuery, admin_id, (err, data) => {
                 if(err){
-                    console.log(err);
+                    res.json({
+                        code: 50,
+                        msg: '查询添加管理员失败',
+                        data: {}
+                    })
                 }else{
-                    // result.status = 200;
-                    console.log('管理员'+ name +'添加成功');
+                    res.json({
+                        code: 1,
+                        msg: '添加管理员成功',
+                        data: data[0]
+                    })
                 }
-            });
-            pool.end();             
+            })
+            conn.end()
         }
     })
-    res.send();
+    
+
 });
 
 module.exports = Router;
