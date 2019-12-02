@@ -13,6 +13,9 @@ var dbConfig = require('./config/mysql');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+var categoriesRouter = require('./routes/api/categories');
+var tagsRouter = require('./routes/api/tags')
+
 var videoInfoRouter = require('./routes/api/video/videoInfo');
 var addVideoRouter = require('./routes/api/video/addVideo');
 var delVideoRouter = require('./routes/api/video/delVideo');
@@ -88,7 +91,8 @@ app.use('/api/user/addUser', addUserRouter)
 app.use('/api/user/updateUserInfo', updateUserRouter)
 app.use('/api/user/queryUser', queryUserRouter);
 
-
+app.use('/api/categories', categoriesRouter)
+app.use('/api/tags', tagsRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

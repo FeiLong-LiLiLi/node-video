@@ -18,14 +18,14 @@ Router.post('/',function(req,res){
             res.json({
                 code: 50,
                 msg: '视频查询失败',
-                data: data
+                // data: data
             });
         }else{
             res.json({
                 code: 1,
                 msg: '视频查询成功',
                 total: data.length,
-                data: data
+                video: data
             });
         }
     })

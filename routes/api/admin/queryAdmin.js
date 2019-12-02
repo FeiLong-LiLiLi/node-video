@@ -18,7 +18,7 @@ Router.post('/',function(req,res){
             res.json({
                 code: 50,
                 msg: '查询管理员失败',
-                data: data
+                // data: data
             })
         }else{
             res.json({

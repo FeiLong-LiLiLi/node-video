@@ -19,7 +19,7 @@ Router.get('/',function(req,res){
             res.json({
                 code: 50,
                 msg: '管理员删除失败',
-                data: data.affectedRows
+                // data: data.affectedRows
             })
         }else{
             res.json({

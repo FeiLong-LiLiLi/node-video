@@ -32,7 +32,7 @@ Router.post('/',function(req,res){
             res.json({
                 code: 50,
                 msg: '创建用户失败',
-                data: {}
+                // data: {}
             })
         }else{
             pool.query(sqlQuery, user_id, (err, data) =>{
@@ -40,7 +40,7 @@ Router.post('/',function(req,res){
                     res.json({
                         code: 50,
                         msg: '查询创建用户失败',
-                        data: {}
+                        // data: {}
                     })
                 }
                 res.json({

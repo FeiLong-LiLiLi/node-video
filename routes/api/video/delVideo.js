@@ -44,13 +44,13 @@ Router.get('/',function(req,res){
             res.json({
                 code: 50,
                 msg: '视频删除失败',
-                data: data.affectedRows
+                // data: data.affectedRows
             })
         }else{
             res.json({
                 code: 1,
                 msg: '视频删除成功',
-                data: data.affectedRows
+                video: data.affectedRows
             })
         }
     })

@@ -30,7 +30,7 @@ Router.post('/',function(req,res){
             res.json({
                 code: 50,
                 msg: '管理员数据更新失败',
-                data: data
+                // data: data
             })
         }else{
             conn.query(sqlQuery, admin_id, (err, data) =>{
@@ -38,13 +38,13 @@ Router.post('/',function(req,res){
                     res.json({
                         code: 50,
                         msg: '管理员数据更新失败',
-                        data: data
+                        // data: data
                     })
                 }else{
                     res.json({
                         code: 1,
                         msg: '管理员数据更新成功',
-                        data: data
+                        data: data[0]
                     })
                 }
             })

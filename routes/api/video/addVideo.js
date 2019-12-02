@@ -34,7 +34,7 @@ Router.post('/',function(req,res){
             res.json({
                 code: 50,
                 msg: '视频添加失败',
-                data: {}
+                // data: {}
             })
         }else{
             pool.query(sqlQuery, video_id, (err, data) =>{
@@ -43,14 +43,14 @@ Router.post('/',function(req,res){
                     res.json({
                         code: 50,
                         msg: '查询添加的视频失败',
-                        data: data
+                        // data: data
                     })
                 }else{
                     // console.log(data);
                     res.json({
                         code: 1,
                         msg: '视频添加成功',
-                        data: data[0]
+                        video: data[0]
                     })
                 }
             })

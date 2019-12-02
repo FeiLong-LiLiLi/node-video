@@ -19,7 +19,7 @@ Router.post('/',function(req,res){
             res.json({
                 code: 50,
                 msg: '查询用户信息失败',
-                data: data 
+                // data: data 
             })
         }else{
             res.json({

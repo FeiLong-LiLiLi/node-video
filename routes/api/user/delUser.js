@@ -20,7 +20,7 @@ Router.get('/',function(req,res){
             res.json({
                 code: 50,
                 msg: '删除用户失败',
-                data: data.affectedRows
+                // data: data.affectedRows
             })
         }else{
             res.json({

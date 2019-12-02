@@ -17,14 +17,14 @@ router.get('/',function(req,res){
             res.json({
                 code: 50,
                 msg: '获取数据失败',
-                data: {}
+                // data: {}
             })
         }else{
             res.json({
                 code: 1,
                 msg: '获取数据成功',
                 total: data.length,
-                data: data
+                video: data
             })
         }
     })

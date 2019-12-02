@@ -15,7 +15,7 @@ router.get('/',function(req,res,next){
            res.json({
                code: 50,
                msg: '获取管理员信息失败',
-               data: data
+            //    data: data
            })
         }else{
             res.json({
