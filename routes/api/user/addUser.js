@@ -29,7 +29,7 @@ Router.post('/',function(req,res){
     pool.connect();
     pool.query(sqlInsert, addParams,(err) =>{
         if(err){
-            res.json({
+            res.send({
                 code: 50,
                 msg: '创建用户失败',
                 // data: {}
@@ -37,13 +37,13 @@ Router.post('/',function(req,res){
         }else{
             pool.query(sqlQuery, user_id, (err, data) =>{
                 if(err){
-                    res.json({
+                    res.send({
                         code: 50,
                         msg: '查询创建用户失败',
                         // data: {}
                     })
                 }
-                res.json({
+                res.send({
                     code: 1,
                     msg: '创建用户成功',
                     data: data[0]
@@ -52,30 +52,7 @@ Router.post('/',function(req,res){
             pool.end()
         }
     })
-    //  //连接数据库
-    // var pool = mysql.createConnection(dbConfig);
-    // pool.connect();
-    // pool.query(sqlQuery, user_id, function(err, data){
-    //     if(err){
-    //         console.log(err);
-    //     }else if(data.length > 0){
-    //         console.log('id已经存在');
-    //         // result.status = 500;
-    //         // res.json(result)
-    //     }else{    
-    //         pool.query(sqlInsert, addParams, function(err, data){
-    //             if(err){
-    //                 console.log(err);
-    //             }else{
-    //                 // result.status = 200;
-    //                 console.log('用户'+ name +'添加成功');
-    //             }
-    //         });
-    //         pool.end();             
-    //     }
-    // })
-    // // console.log(result);
-    // res.json();
+
 });
 
 module.exports = Router;

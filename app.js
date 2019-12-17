@@ -4,14 +4,18 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
-var mysql = require('mysql');
-var dbConfig = require('./config/mysql');
+// var mysql = require('mysql');
+// var dbConfig = require('./config/mysql');
 
+var http = require('http');
+var fs = require('fs')
+var querystring = require('querystring');
 
 
 //引入路由
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var usersRouter = require('./routes/api/users');
+var adminsRouter = require('./routes/api/admins');
 
 var categoriesRouter = require('./routes/api/categories');
 var tagsRouter = require('./routes/api/tags')
@@ -35,6 +39,9 @@ var updateUserRouter = require('./routes/api/user/updateUserInfo');
 var queryUserRouter = require('./routes/api/user/queryUser');
 
 
+var monitorRouter = require('./routes/api/monitor/now');
+
+
 
 var app = express();
 // var Router = express.Router();
@@ -47,6 +54,9 @@ var app = express();
 
 //请求
 app.all('*', function(req, res, next) {
+ 
+
+
   res.header("Access-Control-Allow-Origin", "*");
   // res.header("Access-Control-Allow-Headers", "X-Requested-With");
   res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
@@ -54,6 +64,9 @@ app.all('*', function(req, res, next) {
   res.header("X-Powered-By",' 3.2.1');
   res.header("Content-Type", "application/json;charset=utf-8");
   next();
+
+ 
+
 });
 
 
@@ -84,15 +97,19 @@ app.use('/api/admin/addAdmin', addAdminRouter);
 app.use('/api/admin/delAdmin', delAdminRouter);
 app.use('/api/admin/updateAdmin', updateAdminRouter);
 app.use('/api/admin/queryAdmin', queryAdminRouter);
+app.use('/api/admins', adminsRouter);
 
 app.use('/api/user/usersInfo', getUsersRouter);
 app.use('/api/user/delUser', delUserRouter);
 app.use('/api/user/addUser', addUserRouter)
 app.use('/api/user/updateUserInfo', updateUserRouter)
 app.use('/api/user/queryUser', queryUserRouter);
+app.use('/api/users', usersRouter);
 
 app.use('/api/categories', categoriesRouter)
 app.use('/api/tags', tagsRouter)
+
+app.use('/api/monitor/now', monitorRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -110,7 +127,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
 
 
 

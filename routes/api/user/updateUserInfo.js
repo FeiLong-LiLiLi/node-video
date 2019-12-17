@@ -29,7 +29,8 @@ Router.post('/',function(req,res){
         if(err){
             console.log(err);
             
-            res.json({
+            res.send({
+                success: false,
                 code: 50,
                 msg: '用户更新失败',
                 // data: data
@@ -37,16 +38,17 @@ Router.post('/',function(req,res){
         }else{
             pool.query(sqlQuery, user_id, (err, data) => {
                 if(err){
-                    res.json({
-                        code: 50,
+                    res.send({
+                        success: false,
+                        code: 40,
                         msg: '查询更新用户失败',
-                        // data: {}
                     })
                 }else{
-                    res.json({
+                    res.send({
+                        success: true,
                         code: 1,
                         msg: '用户更新成功',
-                        data: data[0]
+                        user: data[0]
                     })
                 }
             })
