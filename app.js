@@ -1,15 +1,22 @@
+// import createError from 'http-errors'
+// import express from 'express'
+// import path from 'path'
+// import logger from 'morgan'
+// import cookieParser from 'cookie-parser'
+// import bodyParser from 'body-parser'
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
+var session = require('express-session');
 // var mysql = require('mysql');
 // var dbConfig = require('./config/mysql');
 
-var http = require('http');
-var fs = require('fs')
-var querystring = require('querystring');
+// var http = require('http');
+// var fs = require('fs')
+// var querystring = require('querystring');
 
 
 //引入路由
@@ -54,9 +61,6 @@ var app = express();
 
 //请求
 app.all('*', function(req, res, next) {
- 
-
-
   res.header("Access-Control-Allow-Origin", "*");
   // res.header("Access-Control-Allow-Headers", "X-Requested-With");
   res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
@@ -64,10 +68,15 @@ app.all('*', function(req, res, next) {
   res.header("X-Powered-By",' 3.2.1');
   res.header("Content-Type", "application/json;charset=utf-8");
   next();
-
- 
-
 });
+
+app.use(session({
+    secret: 'key_session',
+    resave: false,
+    saveUninitialized: true,
+    // duration: 30 * 60 * 1000,
+    // activeDuration: 5 * 60 * 1000,
+}));
 
 
 // view engine setups
@@ -134,3 +143,4 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
+

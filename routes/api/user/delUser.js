@@ -17,16 +17,16 @@ Router.get('/',function(req,res){
     pool.connect();
     pool.query(sqlDel, user_id, (err, data) => {
         if(err){ 
-            res.json({
+            res.send({
+                success: false,
                 code: 50,
                 msg: '删除用户失败',
-                // data: data.affectedRows
             })
         }else{
-            res.json({
+            res.send({
+                success: true,
                 code: 1,
                 msg: '删除用户成功',
-                data: data.affectedRows
             })
         }  
     })

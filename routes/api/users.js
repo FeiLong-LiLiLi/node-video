@@ -9,80 +9,104 @@ var Router = express.Router();
 
 
 Router.post('/login',(req,res) => {
-    
-    // var reqData = req.body;
-    var userName = req.body.name;
-    var userPSW = req.body.psw;
-    // console.log(reqData)
-    const sqlName = 'SELECT * FROM USERS WHERE NAME = ?'
-    // const sqlPSW = 
-    // const sql = 'SELECT * FROM  TAGS';
-    // const sqlQuery = 'SELECT * FROM  users WHERE user_id = ?';
-   
+
+    // console.log(req.body);
+    // const reqData = req.body;
+    const userEmail = req.body.email;
+    const userPSW = req.body.psw;
+    const sqlEmail = 'select * from users where email =?'
+    // const param = [reqData.user, reqData.password, reqData.email];
+
+
     var pool = mysql.createConnection(dbConfig);
     pool.connect()
-    pool.query(sqlName, userName, (err,data) => {
+    pool.query(sqlEmail, userEmail, (err,data) => {
         if(err){
+            console.log(err);
             res.send({
                 success: false,
                 code: 50,
                 msg: '查询错误',
-                tags: ""
             })
         }else{
-            // console.log(data.length)
             if(data.length == 0){
                 res.send({
                     success: false,
                     code: 50,
                     msg: '用户不存在',
-                    // tags: ""
                 })
             }else if(data[0].psw == userPSW){
                 res.send({
                     success: true,
                     code: 1,
                     msg: '登录成功',
-                    // total: data.length,
-                    // tags: data
+                    user: data[0]
+            
                 })
             }else{
                 res.send({
-                    success: true,
+                    success: false,
                     code: 50,
                     msg: '密码错误',
-                    // total: data.length,
-                    // tags: data
+            
                 })
-            }
-
-                
-         
+            }     
         }
     })
     pool.end();
-    // res.end()
+
+    // const sqlPSW = 
+    // const sql = 'SELECT * FROM  TAGS';
+    // const sqlQuery = 'SELECT * FROM  users WHERE user_id = ?';
+    // const reqData = JSON.parse(data.loginData); //login的数据，姓名，密码，邮箱
+    // var userName = reqData.user;
+    // var userPSW = reqData.password;
+    // var userEmail= reqData.email;
+    // const selectSql = 'select * from users where name=?&&psw=?&&email=?'
+    // var  param = [reqData.user, reqData.password, reqData.email];
+    // pool.query(selectSql, param, (err,data) => {
+    //     if(err){
+    //         console.log('select err: ',err.message);
+    //         return;
+    //     }
+    //     if(data.length==1){
+    //         res.send({
+    //              success: true,
+    //              code: 1,
+    //              msg: ''
+    //             //  msg:data[0].name,
+    //             //  id:data[0].user_id
+    //             })
+    //     }else{
+    //         res.send({
+    //             success: false,
+    //             code: 0,
+    //             msg: '请重试'
+    //         });
+    //     }
+    // });
 })
 
 Router.post('/register', (req, res) =>{
+    // console.log(req.body);
     const reqData = req.body;
     const uid = uuid.v1();
     const user_id = uid.replace(/\-/g, '');
     const creat_time = req._startTime;
 
     const queryEmail = 'select * from users where email =? '
-    const queryPhone = 'select * from users where phone =?'
-    const insertUser = 'insert into  users(user_id, name, phone, email, psw, creat_time) values (?,?,?,?,?,?)'
-    params = [user_id, reqData.name, reqData.phone, reqData.email, reqData.psw, creat_time];
-    // console.log(reqData.email);
+    const queryPhone = 'select * from users where phone =? '
+    const insertUser = 'insert into  users(user_id, name,  psw, phone, email, creat_time) values (?,?,?,?,?,?)'
+    params = [user_id, reqData.name, reqData.psw, reqData.phone, reqData.email, creat_time];
 
     var pool = mysql.createConnection(dbConfig);
-    pool.connect()
+    pool.connect();
     pool.query(queryEmail, reqData.email, (err, data) =>{
         if(err){
+            // console.log(err)
             res.send({
                 success: false,
-                code: 50,
+                code: 51,
                 msg: '注册失败'
             })
         }else if(data.length > 0){
@@ -94,30 +118,33 @@ Router.post('/register', (req, res) =>{
         }else{
             pool.query(queryPhone, reqData.phone, (err, data) => {
                 if(err){
+                    // console.log(err)
                     res.send({
                         success: false,
-                        code: 50,
+                        code:52,
                         msg: '注册失败'
                     })
                 }else if(data.length > 0){
                     res.send({
                         success: false,
-                        code: 30,
+                        code:30,
                         msg: '手机号已注册'
                     })
                 }else{
                     pool.query(insertUser, params, (err, data) => {
                         if(err){
+            
                             res.send({
                                 success: false,
-                                code: 50,
+                                code:53,
                                 msg: '注册失败'
                             })
                         }else{
                             res.send({
                                 success: true,
                                 code: 1,
-                                msg: '注册成功'
+                                msg: '注册成功',
+                                user: reqData
                             })
                         }
                     })
@@ -126,7 +153,6 @@ Router.post('/register', (req, res) =>{
             })
         }
     })
-
 })
 
 

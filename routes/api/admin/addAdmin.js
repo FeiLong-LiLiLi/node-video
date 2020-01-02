@@ -30,7 +30,8 @@ Router.post('/',function(req,res){
     conn.connect();
     conn.query(sqlInsert, addParams, (err, data) => {
         if(err){
-            res.json({
+            res.send({
+                success: false,
                 code: 50,
                 msg: '添加管理员失败',
                 // data: data
@@ -38,13 +39,15 @@ Router.post('/',function(req,res){
         }else{
             conn.query(sqlQuery, admin_id, (err, data) => {
                 if(err){
-                    res.json({
-                        code: 50,
+                    res.send({
+                        success: false,
+                        code: 40,
                         msg: '查询添加管理员失败',
                         // data: {}
-                    })
+                    }) 
                 }else{
-                    res.json({
+                    res.send({
+                        success: true,
                         code: 1,
                         msg: '添加管理员成功',
                         data: data[0]

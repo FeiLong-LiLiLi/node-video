@@ -35,10 +35,15 @@ Router.post('/login',(req,res) => {
                     msg: '用户不存在'
                 })
             }else if(data[0].psw == reqData.psw){
+                req.session.user = data[0];
+                req.session.login = true;
+                // console.log(req.session);
                 res.send({
                     success: true,
                     code: 1,
-                    msg: '登录成功'
+                    msg: '登录成功',
+                    sessionID: req.sessionID,
+                    session: req.session
                 })
             }else{
                 res.send({
@@ -53,6 +58,56 @@ Router.post('/login',(req,res) => {
         }
     })
     pool.end();
+});
+
+Router.get('/checkLogin',function(req, res){
+    // req.session.login = false;
+    console.log(req.sessionStore)
+    // console.log(req.session);
+   
+    if(req.session.login == true){
+        res.send({
+            success: true,
+            code: 1,
+            msg: '存在登录信息',
+            session: req.session
+        });
+    }else{
+        res.send({
+            success: false,
+            code: 50,
+            msg: '不存在登录信息',
+            session: req.session
+        });
+    }
+    // res.send({
+    //     store:req.sessionStore,
+    //     sessionID: req.sessionID,
+    //     session: req.session
+    // });
+   
+    
+});
+
+Router.get('/logout', function(req, res, next) {
+    
+    if(req.session.login == true){
+        req.session.login = false;
+        req.session.destroy();
+        // res.redirect('/login');
+        res.send({
+            success: true,
+            code: 1,
+            msg: '退出成功'
+        }); 
+    }else{
+        res.send({
+            success: false,
+            code: 50,
+            msg: '退出失败'
+        }); 
+    }
+      
 })
 
 // Router.post('/register', (req, res) =>{

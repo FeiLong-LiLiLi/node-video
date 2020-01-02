@@ -28,6 +28,7 @@ Router.post('/',function(req,res){
     conn.query(sqlUpdade, updateParams, (err, data) =>{
         if(err){
             res.send({
+                success: false,
                 code: 50,
                 msg: '管理员数据更新失败',
                 // data: data
@@ -36,12 +37,14 @@ Router.post('/',function(req,res){
             conn.query(sqlQuery, admin_id, (err, data) =>{
                 if(err){
                     res.send({
-                        code: 50,
-                        msg: '管理员数据更新失败',
+                        success: false,
+                        code: 40,
+                        msg: '管理员数据查询更新失败',
                         // data: data
                     })
                 }else{
                     res.send({
+                        success: true,
                         code: 1,
                         msg: '管理员数据更新成功',
                         admin: data[0]

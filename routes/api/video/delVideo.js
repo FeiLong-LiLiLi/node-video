@@ -41,16 +41,16 @@ Router.get('/',function(req,res){
 
     pool.query(sqlDel, video_id, (err, data) => {
         if(err){
-            res.json({
+            res.send({
+                success: false,
                 code: 50,
                 msg: '视频删除失败',
-                // data: data.affectedRows
             })
         }else{
-            res.json({
+            res.send({
+                success: true,
                 code: 1,
                 msg: '视频删除成功',
-                video: data.affectedRows
             })
         }
     })

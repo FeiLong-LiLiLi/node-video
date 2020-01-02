@@ -2,10 +2,10 @@ var express = require('express');
 var mysql = require('mysql');
 var dbConfig = require('../../../config/mysql');
 
-var router = express.Router();
+var Router = express.Router();
 
 
-router.get('/',function(req,res){
+Router.get('/count',function(req,res){
 
     const sqlQuery = 'SELECT * FROM  video';
     
@@ -14,48 +14,83 @@ router.get('/',function(req,res){
     pool.query(sqlQuery, (err, data) => {
         if(err){
             console.log(err);
-            res.json({
+            res.send({
+                success: false,
                 code: 50,
-                msg: '获取数据失败',
-                // data: {}
+                msg: '获取视频数量失败',
+        
             })
         }else{
-            res.json({
+            res.send({
+                success: true,
                 code: 1,
-                msg: '获取数据成功',
+                msg: '获取视频数量成功',
                 total: data.length,
-                video: data
+         
             })
         }
     })
     pool.end()
+})
 
+Router.get('/all', function(req, res){
+    const reqData = req.query;
+    const page = parseInt(req.query.page);
+    const num = parseInt(reqData.num);
 
-    // var pool = mysql.createPool(dbConfig);
-    // pool.getConnection((err, conn) =>{
-    //     if(err){
-    //         console.log(err);
-    //     }else{
-    //         conn.query(sqlQuery, (err, data) =>{
-    //             if(err){
-    //                 res.json({
-    //                     code: 50,
-    //                     msg: '获取数据失败',
-    //                     data: []
-    //                 })
-    //             }else{
-    //                 res.json({
-    //                     code: 1,
-    //                     msg: '获取数据',
-    //                     data: data
-    //                 })
-    //             }
-    //         })
-    //         conn.release()
-    //     }
-    // })
+    const sqlVideos = 'select * from video limit ?,?'
+    const params = [page*num, num]
+    var pool = mysql.createConnection(dbConfig);
+    pool.connect()
+    pool.query(sqlVideos, params, (err,data) => {
+        if(err){
+            res.send({
+                success: false,
+                code: 50,
+                msg: '获取视频信息失败',
+            })
+        }else{
+            res.send({
+                success: true,
+                code: 1,
+                msg: '获取视频信息成功',
+                videos: data
+            })
+        }
+    })
+    pool.end();
     
 })
 
-module.exports = router;
+// Router.get('/',function(req,res){
+
+//     const sqlQuery = 'SELECT * FROM  video';
+    
+//     var pool = mysql.createConnection(dbConfig);
+//     pool.connect();
+//     pool.query(sqlQuery, (err, data) => {
+//         if(err){
+//             console.log(err);
+//             res.send({
+//                 success: false,
+//                 code: 50,
+//                 msg: '获取视频失败',
+        
+//             })
+//         }else{
+//             res.send({
+//                 success: true,
+//                 code: 1,
+//                 msg: '获取视频数量成功',
+//                 total: data.length,
+         
+//             })
+//         }
+//     })
+//     pool.end()
+// })
+
+
+
+module.exports = Router;
 

@@ -27,21 +27,24 @@ Router.post('/',function(req,res){
 
     pool.query(sqlUpdade, updateParams, (err) =>{
         if(err){
-            res.json({
+            res.send({
+                success: false,
                 code: 50,
                 msg: '视频更新失败',
-                // data: data
+        
             })
         }else{
             pool.query(sqlQuery, video_id, (err,data) =>{
                 if(err){
-                    res.json({
+                    res.send({
+                        success: false,
                         code: 50,
-                        msg: '查询更新视频失败',
+                        msg: '查询更新视频失败, 请刷新',
                         // data: data
                     })
                 }else{
-                    res.json({
+                    res.send({
+                        success: true,
                         code: 1,
                         msg: '视频更新成功',
                         video: data[0]

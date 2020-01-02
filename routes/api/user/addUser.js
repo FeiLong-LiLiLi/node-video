@@ -16,9 +16,7 @@ Router.post('/',function(req,res){
     const phone = req.body.phone;
     const email = req.body.email;
     const creat_time = req._startTime;
-    // const sex = req.body.sex;
-    // const personal_signature = req.body.personal_signature;
-   
+    const sex = '';
     
     //查询id是否存在， 同理可用于判断是否存在邮箱
     const sqlQuery = 'SELECT * FROM  users WHERE user_id = ?'
@@ -27,9 +25,10 @@ Router.post('/',function(req,res){
 
     var pool = mysql.createConnection(dbConfig);
     pool.connect();
-    pool.query(sqlInsert, addParams,(err) =>{
+    pool.query(sqlInsert, addParams,(err) =>{   
         if(err){
             res.send({
+                success: false,
                 code: 50,
                 msg: '创建用户失败',
                 // data: {}
@@ -38,16 +37,19 @@ Router.post('/',function(req,res){
             pool.query(sqlQuery, user_id, (err, data) =>{
                 if(err){
                     res.send({
-                        code: 50,
+                        success: false,
+                        code: 40,
                         msg: '查询创建用户失败',
-                        // data: {}
                     })
-                }
-                res.send({
-                    code: 1,
-                    msg: '创建用户成功',
-                    data: data[0]
-                })
+                }else{
+                    // console.log(typeof(sex));
+                    res.send({
+                        success: true,
+                        code: 1,
+                        msg: '创建用户成功',
+                        data: data[0]
+                    })
+                } 
             })
             pool.end()
         }
