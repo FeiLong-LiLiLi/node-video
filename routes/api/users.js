@@ -40,7 +40,9 @@ Router.post('/login',(req,res) => {
                     success: true,
                     code: 1,
                     msg: '登录成功',
-                    user: data[0]
+                    user: data[0],
+                    sessionID: req.sessionID,
+                    session: req.session
             
                 })
             }else{
@@ -153,7 +155,36 @@ Router.post('/register', (req, res) =>{
             })
         }
     })
-})
+});
+
+
+//增加一次用户登录量
+Router.get('/login/add', (req, res) =>{
+    
+    const today = req.query.today;
+    const sqlQuery = 'SELECT * FROM todayinfo WHERE today_date = ?';
+    const sqlInsert = 'INSERT INTO todayinfo(today_date, user_num, play_num) VALUES (?,?,?)';
+    const sqlUpdate = 'UPDATE todayinfo SET login_num = ? WHERE today_date = ?';
+
+    var pool = mysql.createConnection(dbConfig);
+    pool.connect();
+    pool.query(sqlQuery, today, (err, data) =>{
+        if(err){
+            res.send({
+                success: false,
+                code: 50,
+                msg: '查询当日日期失败'
+            });
+        }else if(data.length == 0){
+            console.log('创建当日日期');
+            res.send('创建');
+        }else{
+            console.log('增加');
+            res.send('增加');
+        }
+    });
+    pool.end();
+});
 
 
 module.exports = Router;

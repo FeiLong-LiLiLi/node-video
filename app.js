@@ -47,7 +47,7 @@ var queryUserRouter = require('./routes/api/user/queryUser');
 
 
 var monitorRouter = require('./routes/api/monitor/now');
-
+var todayRouter = require('./routes/api/info/today');
 
 
 var app = express();
@@ -110,16 +110,16 @@ app.use('/api/admins', adminsRouter);
 
 app.use('/api/user/usersInfo', getUsersRouter);
 app.use('/api/user/delUser', delUserRouter);
-app.use('/api/user/addUser', addUserRouter)
-app.use('/api/user/updateUserInfo', updateUserRouter)
+app.use('/api/user/addUser', addUserRouter);
+app.use('/api/user/updateUserInfo', updateUserRouter);
 app.use('/api/user/queryUser', queryUserRouter);
 app.use('/api/users', usersRouter);
 
-app.use('/api/categories', categoriesRouter)
-app.use('/api/tags', tagsRouter)
+app.use('/api/categories', categoriesRouter);
+app.use('/api/tags', tagsRouter);
 
-app.use('/api/monitor/now', monitorRouter)
-
+app.use('/api/monitor/now', monitorRouter);
+app.use('/api/info/today', todayRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
