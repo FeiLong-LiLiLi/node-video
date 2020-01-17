@@ -19,6 +19,7 @@ Router.post('/init', (req, res) =>{
     pool.connect();
     pool.query(sqlQuery, today, (err, data) => {
         if(err){
+            console.log(err)
             res.send({
                 success: false,
                 code: 50,
@@ -27,6 +28,7 @@ Router.post('/init', (req, res) =>{
         }else if(data. length <= 0){
             pool.query(sqlInsert, insertParams, (err, data) => {
                 if(err){
+                    console.log(err)
                     res.send({
                         success: false,
                         code: 51,
@@ -149,7 +151,7 @@ Router.get('/login/add', (req, res) =>{
 //获取当日用户播放量
 Router.get('/amount/play',function(req,res){
     const today = req.query.today;
-    const sqlQuery = 'SELECT * FROM  todayinfo WHERE today_date = ?' ;
+    const sqlQuery = 'SELECT * FROM todayinfo WHERE today_date = ?' ;
     const sqlInsert = 'INSERT INTO todayinfo(today_date, login_num, play_num) VALUES (?,?,?)';
     const insertParams = [today, 0, 0];
 
