@@ -24,7 +24,7 @@ Router.post('/init', (req, res) =>{
                 code: 50,
                 msg: '查询七天内日期失败'
             });
-        }else if(data. length == 0){
+        }else if(data. length <= 0){
             pool.query(sqlInsert, insertParams, (err, data) => {
                 if(err){
                     res.send({

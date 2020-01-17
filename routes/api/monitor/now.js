@@ -307,4 +307,55 @@ Routor.get('/video/now/get', (req, res) =>{
     })
 })
 
+//获取当前播放某视频的用户
+Routor.get('/play/users/get', (req, res) =>{
+    const data = req.query;
+    const sqlQueryUser = 'SELECT DISTINCT user_id, video_id FROM play_video_data WHERE now_time >=? AND video_id = ?';
+    const sqlQueryPlay = 'SELECT *FROM user_play_info WHERE start_date = ? AND video_id = ?'
+    const paramsUser = [data.nowTime, data.videoId]
+    const paramsPlay = [data.today, data.videoId]
+    const pool = mysql.createConnection(dbConfig);
+    pool.query(sqlQueryUser, paramsUser, (err, data) =>{
+        if(err){
+            console.log(err)
+            res.send({
+                success: false,
+                code: 50,
+                msg: '查询正在用户失败'
+            })
+        }else{
+            // console.log(sqlQueryUser);
+            nowplayUsers = data;
+            pool.query(sqlQueryPlay, paramsPlay, (err, data) =>{
+                if(err){
+                    console.log(err);
+                    res.send({
+                        success: false,
+                        code: 51,
+                        msg: '查询今天播放用户失败'
+                    });
+                }else{
+                    todayPlayUsers = data;
+                    playUsers = [];
+                    for(let i = 0; i<nowplayUsers.length; i++){
+                        for(let j = 0; j < todayPlayUsers.length; j++){
+                            if(nowplayUsers[i].user_id == todayPlayUsers[j].user_id){
+                                playUsers.push(todayPlayUsers[i])
+                            }
+                        }
+                    }
+                    res.send({
+                        success: true,
+                        code: 1,
+                        msg: '获取观看该视频用户成功',
+                        playUsers:playUsers
+                    });
+                }
+            })
+            pool.end();
+
+        }
+    })
+    // pool.end();
+})
 module.exports = Routor;
